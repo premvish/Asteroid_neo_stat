@@ -18,18 +18,24 @@
             <table id="count" class="table">
                 <tr>
                     <th>Date</th>
-                    <th>count</th>
+                    <th>Count</th>
                 </tr>
             </table>
             <br/>
 
-            <table id="result" class="table">
+            <table id="speed" class="table">
                 <tr>
                     <th>Date</th>
-                    <th>Name</th>
+                    <th>Speed in Km/Hr</th>
                 </tr>
             </table>
 
+            <table id="closest" class="table">
+                <tr>
+                    <th>Date</th>
+                    <th>Distance from Earth KM</th>
+                </tr>
+            </table>
 
             <canvas id="myChart"></canvas>
 
@@ -49,47 +55,32 @@
                         type: "GET",
                         url: "https://api.nasa.gov/neo/rest/v1/feed?start_date=" + sd + "&end_date=" + ed + "&api_key=1L8SUyJc2it9dkDytzBWQSP6tAW3cafss9hO9Gez",
                         success: function (res) {
-                            console.dir(res.near_earth_objects);
-
-
 
                             /*for count the no of asteroids in each date*/
                             Object.keys(res.near_earth_objects).forEach(function (key) {
                                 $("#count").append("<tr><td>" + key + "</td><td>" + res.near_earth_objects[key].length + "</td></tr>");
 
-
-
+                                /*For finding speed of Asteroids*/
                                 for (var i = 0; i < res.near_earth_objects[key].length; i++) {
-
-                                    $("#result").append("<tr><td>" + key + "</td><td>" + res.near_earth_objects[key][i].name + "</td></tr>");
+                                    $("#speed").append("<tr><td>" + key + "</td><td>" + res.near_earth_objects[key][i].close_approach_data[0].relative_velocity.kilometers_per_hour + "</td></tr>");
+                                }
+                                /*for finding closest Asteroid*/
+                                for (var i = 0; i < res.near_earth_objects[key].length; i++) {
+                                    $("#closest").append("<tr><td>" + key + "</td><td>" + res.near_earth_objects[key][i].close_approach_data[0].miss_distance.kilometers + "</td></tr>");
                                 }
 
 
-                                var myarray = [];
-                                
-                                        myarray.push(res.near_earth_objects[key].length);
-                                        /*Fastest asteroids*/
-                                        //myarray.toString();
-                                        for(var j=0;j<myarray.length;j++){
-
-                                          myarray.sort();
-
-                                          $("#fastest").append("<span>"+myarray.length+"</span>");
-
-
-                                        }
-
-                                        /*end fastest*/
+                                /*comparison */
 
                   /*chart code*/
                                 var ctx = document.getElementById("myChart").getContext('2d');
                         var myChart = new Chart(ctx, {
                             type: 'bar',
                             data: {
-                                labels: [myarray],
+                                labels: [key],
                                 datasets: [{
                                     label: 'Asteroids Chart',
-                                    data: [myarray],
+                                    data: [res.near_earth_objects[key].length],
                                     backgroundColor: [
                                         'rgba(255, 99, 132, 0.2)',
                                         'rgba(54, 162, 235, 0.2)',
@@ -120,28 +111,12 @@
                             }
                         });
                         /*end chart code*/
-
-
-
                             });
                         }
                     });
                 });
 
             });
-
-
-
-
-
-
-
     </script>
-
-
-
-
-
-
     </body>
 </html>
