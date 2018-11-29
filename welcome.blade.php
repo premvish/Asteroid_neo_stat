@@ -75,12 +75,13 @@
                   /*chart code*/
                                 var ctx = document.getElementById("myChart").getContext('2d');
                         var myChart = new Chart(ctx, {
+
                             type: 'bar',
                             data: {
-                                labels: [key],
+                                labels: [Object.keys(res.near_earth_objects)],
                                 datasets: [{
                                     label: 'Asteroids Chart',
-                                    data: [res.near_earth_objects[key].length],
+                                    data: [Object.keys(res.near_earth_objects).length],
                                     backgroundColor: [
                                         'rgba(255, 99, 132, 0.2)',
                                         'rgba(54, 162, 235, 0.2)',
@@ -109,6 +110,8 @@
                                     }]
                                 }
                             }
+
+
                         });
                         /*end chart code*/
                             });
