@@ -1,25 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Asteroid Neo_stat</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
 
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    </head>
 
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-
-  <nav class="nav navbar-inverse text-center primary">
-    <h1 style="color:blue;">Welcome to Asteroid NEO Stat</h1>
-  </nav>
-
-  <div class="container">
+    <body>
+        <div class="container">
             <h3 class="alert alert-danger">The Feed date limit is only 7 Days</h3>
             Start date : <input type="date" id="start-date" class="form-control"/><br/>
             End date : <input type="date" id="end-date" class="form-control"/><br/>
@@ -32,21 +22,20 @@
                 </tr>
             </table>
             <br/>
+
             <table id="result" class="table">
                 <tr>
                     <th>Date</th>
                     <th>Name</th>
                 </tr>
-
-
-
             </table>
 
 
             <canvas id="myChart"></canvas>
 
-
-
+            <div id="fastest"></div>
+            <div id="closest"></div>
+            <div id="average"></div>
 
 
         </div>
@@ -63,17 +52,74 @@
                             console.dir(res.near_earth_objects);
 
 
+
+                            /*for count the no of asteroids in each date*/
                             Object.keys(res.near_earth_objects).forEach(function (key) {
                                 $("#count").append("<tr><td>" + key + "</td><td>" + res.near_earth_objects[key].length + "</td></tr>");
+
+
+
                                 for (var i = 0; i < res.near_earth_objects[key].length; i++) {
 
                                     $("#result").append("<tr><td>" + key + "</td><td>" + res.near_earth_objects[key][i].name + "</td></tr>");
                                 }
 
 
+                                var myarray = [];
+                                
+                                        myarray.push(res.near_earth_objects[key].length);
+                                        /*Fastest asteroids*/
+                                        //myarray.toString();
+                                        for(var j=0;j<myarray.length;j++){
+
+                                          myarray.sort();
+
+                                          $("#fastest").append("<span>"+myarray.length+"</span>");
 
 
+                                        }
 
+                                        /*end fastest*/
+
+                  /*chart code*/
+                                var ctx = document.getElementById("myChart").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: [myarray],
+                                datasets: [{
+                                    label: 'Asteroids Chart',
+                                    data: [myarray],
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.2)',
+                                        'rgba(54, 162, 235, 0.2)',
+                                        'rgba(255, 206, 86, 0.2)',
+                                        'rgba(75, 192, 192, 0.2)',
+                                        'rgba(153, 102, 255, 0.2)',
+                                        'rgba(255, 159, 64, 0.2)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255,99,132,1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero:true
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                        /*end chart code*/
 
 
 
@@ -89,9 +135,13 @@
 
 
 
-         
 
-        </script>
+    </script>
 
-</body>
+
+
+
+
+
+    </body>
 </html>
